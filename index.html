@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Infographic: Strategic Leadership in MedTech</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F9FA; /* Lighter background for a fresh look */
+            color: #343A40; /* Darker text for better readability */
+            perspective: 1000px; /* For general 3D transforms on the entire body */
+        }
+        .container {
+            max-width: 1200px; /* Max width for better readability on large screens */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 300px; /* Consistent height for charts */
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .kpi-value {
+            font-weight: 900;
+            color: #FF7C43; /* Accent color */
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2); /* Stronger text shadow */
+        }
+        .kpi-label {
+            color: #003F5C; /* Primary brand color */
+        }
+        .section-title {
+            color: #003F5C; /* Primary brand color */
+            font-weight: 800; /* Extra bold for titles */
+        }
+        .card {
+            background-color: white;
+            border-radius: 1rem; /* More rounded corners */
+            /* Refined shadow for a softer, more diffused look */
+            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.1), 0 8px 12px -4px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease-out, box-shadow 0.3s ease-out; /* Smoother transition */
+            border: 1px solid #E9ECEF; /* Subtle border */
+            transform-style: preserve-3d; /* For child 3D transforms */
+        }
+        .card:hover {
+            transform: translateY(-8px) rotateX(1deg) rotateY(1deg); /* Slightly less pronounced lift and subtle 3D rotation */
+            box-shadow: 0 25px 50px -8px rgba(0, 0, 0, 0.15), 0 12px 18px -6px rgba(0, 0, 0, 0.08); /* Even deeper shadow on hover */
+        }
+
+        /* Header specific styles */
+        header {
+            background:
+                /* Image background */
+                url('493c8547-b2e7-46ab-a586-764db4560425.jpg') no-repeat center center,
+                /* Dark overlay for text readability */
+                linear-gradient(rgba(0, 63, 92, 0.6), rgba(47, 75, 124, 0.6));
+            background-size: cover, cover; /* Ensure image and overlay cover */
+            background-blend-mode: multiply; /* Blend image with the gradient */
+            color: white;
+            padding: 4rem 2rem;
+            border-radius: 1rem;
+            margin-bottom: 3rem;
+            box-shadow: 0 20px 40px -8px rgba(0, 0, 0, 0.2);
+            position: relative; /* Needed for proper layering */
+            overflow: hidden; /* Ensure background doesn't overflow rounded corners */
+        }
+
+        header h1 {
+            font-size: 4.5rem; /* Increased font size for the title */
+            line-height: 1.2;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.3); /* Text shadow for depth */
+            position: relative; /* Ensure text is above background image and overlay */
+            z-index: 1;
+        }
+        header p {
+            position: relative; /* Ensure text is above background image and overlay */
+            z-index: 1;
+        }
+        header .name-link {
+            display: inline-block;
+            margin-top: 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #FFD700; /* Gold color for visibility */
+            text-decoration: underline;
+            transition: color 0.3s ease;
+        }
+        header .name-link:hover {
+            color: #FFFFFF;
+        }
+
+        /* About Me section */
+        #about-me p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #495057;
+        }
+
+        /* Skills section */
+        #skills .skill-category {
+            background-color: #F0F4F8; /* Lighter background for skill cards */
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05); /* Softer inner shadow */
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            transform-style: preserve-3d;
+        }
+        #skills .skill-category:hover {
+            background-color: #E2E8F0;
+            transform: translateY(-4px) translateZ(8px); /* Lift and push forward */
+            box-shadow: inset 0 3px 7px rgba(0,0,0,0.08); /* Softer inner shadow on hover */
+        }
+        #skills .skill-category h3 {
+            color: #003F5C;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        #skills .skill-category ul {
+            list-style: none;
+            padding: 0;
+        }
+        #skills .skill-category li {
+            padding: 0.25rem 0;
+            color: #495057;
+            font-size: 0.95rem;
+        }
+        #skills .skill-category li strong {
+            color: #003F5C;
+        }
+
+        /* Core Foundation Section */
+        .synergy-circle {
+            width: 180px; /* Slightly larger circles */
+            height: 180px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 1rem;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.15); /* Softer shadow */
+            font-weight: 600;
+            color: white;
+            position: absolute;
+            transition: transform 0.3s ease-out;
+        }
+        .synergy-circle:hover {
+            transform: scale(1.03) translateZ(12px); /* Pop out slightly */
+            box-shadow: 0 12px 20px rgba(0,0,0,0.2); /* Deeper shadow on hover */
+        }
+        .synergy-center-circle {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0.5rem;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2); /* Softer shadow */
+            font-weight: 800;
+            color: white;
+            background-color: #2F4B7C;
+            z-index: 10;
+            transition: transform 0.3s ease-out;
+        }
+        .synergy-center-circle:hover {
+            transform: scale(1.08) translateZ(15px); /* Pop out more */
+            box-shadow: 0 10px 18px rgba(0,0,0,0.25); /* Deeper shadow on hover */
+        }
+        @media (max-width: 768px) {
+            .synergy-circle {
+                width: 140px;
+                height: 140px;
+                font-size: 0.9rem;
+            }
+            .synergy-center-circle {
+                width: 80px;
+                height: 80px;
+                font-size: 0.75rem;
+            }
+        }
+
+        /* Key Products & Solutions */
+        .product-solution-item {
+            background-color: #F0F4F8;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05); /* Softer inner shadow */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transform-style: preserve-3d;
+            display: flex; /* Use flexbox for alignment */
+            flex-direction: column; /* Stack content vertically */
+            align-items: center; /* Center horizontally */
+            text-align: center; /* Center text */
+        }
+        .product-solution-item:hover {
+            transform: translateY(-4px) translateZ(7px); /* Lift and push forward */
+            background-color: #E2E8F0;
+            box-shadow: inset 0 3px 7px rgba(0,0,0,0.08); /* Softer inner shadow on hover */
+        }
+        .product-solution-item p.text-5xl {
+            margin-bottom: 0.75rem;
+        }
+        .product-solution-item p.font-bold {
+            font-size: 1.1rem;
+            line-height: 1.3;
+            margin-bottom: 0.5rem;
+        }
+        .product-solution-item p.text-sm {
+            color: #6C757D;
+        }
+        .product-solution-item ul {
+            list-style: disc; /* Ensure disc style for sub-bullets */
+            padding-left: 1.25rem; /* Indent sub-bullets */
+            text-align: left; /* Align sub-bullet text to the left */
+            width: 100%; /* Take full width for text alignment */
+            margin-top: 0.5rem;
+        }
+        .product-solution-item ul li {
+            font-size: 0.9rem;
+            color: #495057;
+            padding: 0.1rem 0;
+        }
+
+
+        /* Trainings & Certifications */
+        .training-item {
+            background-color: #F0F4F8;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05); /* Softer inner shadow */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transform-style: preserve-3d;
+        }
+        .training-item:hover {
+            transform: translateY(-4px) translateZ(7px); /* Lift and push forward */
+            background-color: #E2E8F0;
+            box-shadow: inset 0 3px 7px rgba(0,0,0,0.08); /* Softer inner shadow on hover */
+        }
+        .training-item p.text-5xl {
+            margin-bottom: 0.75rem;
+        }
+        .training-item p.font-bold {
+            font-size: 1.1rem;
+            line-height: 1.3;
+            margin-bottom: 0.5rem;
+        }
+        .training-item p.text-sm {
+            color: #6C757D;
+        }
+
+        /* Timeline specific styles */
+        .timeline-scroll-container {
+            overflow-x: auto; /* Handles horizontal scrolling */
+            padding-bottom: 20px; /* Space for scrollbar */
+        }
+
+        .timeline-wrapper {
+            position: relative;
+            padding: 60px 0; /* Vertical padding around content */
+            white-space: nowrap; /* Keep items in a single line */
+            background-color: #E6EBF0; /* Slightly darker background for the "ground" */
+            border-radius: 1rem;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.08); /* Softer shadow */
+            padding-top: 60px; /* Adjusted padding to be consistent */
+            padding-bottom: 60px; /* Adjusted padding to be consistent */
+            display: flex; /* Ensure flex behavior for horizontal layout */
+            align-items: flex-start;
+            justify-content: flex-start;
+            min-width: max-content; /* Ensure wrapper takes enough width for all content */
+        }
+        .timeline-line {
+            position: absolute;
+            top: 100px; /* Position the line below the dots */
+            left: 0;
+            width: 2145px; /* Adjusted width to end at the last event */
+            height: 10px; /* Much thicker line for the "road" */
+            background: repeating-linear-gradient(to right, #003F5C, #003F5C 90px, #495057 90px, #495057 100px); /* Dashed road effect */
+            box-shadow: 0 3px 6px rgba(0,0,0,0.2); /* Softer shadow for road */
+            z-index: 1;
+        }
+        .timeline-event {
+            display: inline-block;
+            vertical-align: top;
+            width: 250px; /* Wider event blocks */
+            margin: 0 40px; /* Spacing between events */
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            padding-top: 80px; /* Space for dot and line position */
+            transition: transform 0.3s ease-out, box-shadow 0.3s ease-out; /* Smooth transitions */
+            transform-style: preserve-3d; /* Needed for child elements to use translateZ */
+            transform: none; /* No rotation or translateZ on event itself */
+        }
+
+        .timeline-event:hover {
+            transform: translateY(-8px); /* Lift on hover */
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2), 0 6px 12px rgba(0,0,0,0.1); /* Enhanced shadow on hover */
+            z-index: 10; /* Bring hovered item to front */
+        }
+
+
+        .timeline-dot {
+            position: absolute;
+            top: 0; /* Position dot at the very top of the event card's padding */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70px; /* Even larger dot */
+            height: 70px; /* Even larger dot */
+            background-color: #003F5C;
+            border-radius: 50%;
+            border: 4px solid #F8F9FA; /* Thicker border to stand out */
+            box-shadow: 0 6px 15px rgba(0,0,0,0.3), 0 0 0 4px rgba(255,255,255,0.4); /* Softer shadow, subtle glow */
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem; /* Larger icon */
+            color: white;
+            transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
+            transform: translateX(-50%) translateZ(8px); /* Lift dot slightly */
+        }
+        .timeline-dot:hover {
+            transform: translateX(-50%) scale(1.1) translateZ(15px); /* Pop out and push forward */
+            box-shadow: 0 8px 18px rgba(0,0,0,0.35); /* Deeper shadow on hover */
+        }
+        .timeline-event:not(:last-child)::after {
+            content: '→';
+            position: absolute;
+            top: 100px; /* Align arrow with the road line */
+            right: -50px; /* Position between buildings */
+            transform: translateY(-50%); /* No Z-transform needed here */
+            font-size: 3rem; /* Larger arrow */
+            color: #A0AEC0;
+            z-index: 2;
+        }
+        .timeline-content-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            /* Enhanced 3D-like shadow for extrusion effect */
+            box-shadow:
+                4px 4px 12px rgba(0, 0, 0, 0.15), /* Main shadow for depth */
+                -4px -4px 12px rgba(255, 255, 255, 0.6), /* Highlight for top-left edge */
+                inset 0 0 8px rgba(0, 0, 0, 0.04); /* Subtle inner shadow */
+            border: 1px solid #DEE2E6;
+            padding: 1.25rem;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            min-height: 380px; /* Further increased height to accommodate all content */
+            margin-top: 25px; /* Position below the dot */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            transform-style: preserve-3d; /* Keep this for potential future 3D effects within the card */
+            transform: translateY(-15px); /* Lift the card slightly by default */
+            overflow: hidden; /* Ensure content does not visually overflow the box */
+            position: relative; /* For icon positioning */
+        }
+        .timeline-content-card:hover {
+            transform: translateY(-25px) scale(1.01); /* More pronounced lift and slight scale on hover */
+            box-shadow:
+                8px 8px 20px rgba(0, 0, 0, 0.25),
+                -8px -8px 20px rgba(255, 255, 255, 0.8),
+                inset 0 0 12px rgba(0, 0, 0, 0.06);
+        }
+        /* Removed .timeline-card-icon as it's replaced by .timeline-dot */
+        .timeline-content-card .font-bold {
+            font-size: 1.1rem;
+            margin-top: 0.5rem; /* Adjusted margin to fit better after dot */
+            margin-bottom: 0.4rem;
+            color: #003F5C;
+        }
+        .timeline-content-card .text-gray-500 {
+            font-size: 0.75rem; /* Reduced font size for organization name */
+            margin-bottom: 0.6rem;
+            color: #6C757D;
+            white-space: normal; /* Ensure text wraps */
+            word-wrap: break-word; /* Ensure long words break */
+        }
+        .timeline-content-card p:last-of-type { /* Target the last paragraph for the main description */
+            white-space: normal;
+            font-size: 0.95rem;
+            line-height: 1.4;
+            color: #495057;
+            margin-top: 0.5rem; /* Adjusted margin for main content */
+        }
+        /* Ensure job titles wrap within the timeline cards */
+        .timeline-content-card h3 {
+            white-space: normal;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body class="text-gray-700">
+
+    <div class="container mx-auto p-4 md:p-8">
+
+        <header class="text-center mb-12">
+            <h1 class="font-extrabold mb-4">Strategic Leadership in MedTech</h1>
+            <p class="max-w-4xl mx-auto">
+                Strategic MedTech Leadership: Driving Value, Innovation, and Compliance for Meaningful Impact
+            </p>
+            <a href="#" class="name-link">Vineeshkumar P V</a>
+        </header>
+
+        <section id="about-me" class="card p-8 mb-16">
+            <h2 class="text-3xl font-bold section-title mb-6 text-center">About Me</h2>
+            <p class="text-center max-w-4xl mx-auto">
+                With 18 years of progressive experience, I am a seasoned medical device professional specializing in end-to-end product development, from ideation to market realization. My unique blend of deep R&D and engineering expertise, coupled with robust regulatory affairs and quality assurance knowledge (ISO 13485:2016 Lead Auditor certified), enables a synergistic approach where innovation inherently navigates complex regulatory frameworks. I am passionate about proactive compliance integration, mitigating costly redesigns, and accelerating market entry, driving both technical excellence and strategic growth in leadership roles.
+            </p>
+        </section>
+
+        <div class="card p-8">
+            <h2 class="text-3xl font-bold section-title mb-6 text-center">The Innovation Engine</h2>
+            <p class="text-center text-gray-600 mb-8">
+                A proven track record of not just executing projects, but driving genuine innovation, leading to tangible results like intellectual property and formal industry recognition.
+            </p>
+            <div class="flex flex-col space-y-10 justify-center items-center h-full pt-4">
+                <div class="text-center">
+                    <p class="text-7xl mb-3">💡</p>
+                    <p class="text-2xl font-bold" style="color:#003F5C;">Patented Inventor</p>
+                    <p class="text-lg text-gray-600">Stereotactic Device for Medical Procedures</p>
+                </div>
+                 <div class="text-center">
+                    <p class="text-7xl mb-3">🏆</p>
+                    <p class="text-2xl font-bold" style="color:#003F5C;">Innovation Champion</p>
+                    <p class="text-lg text-gray-600">Awarded for CTW Cost Optimization Program</p>
+                </div>
+            </div>
+        </div>
+
+        <section id="kpis" class="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8 text-center mb-16">
+            <div class="card p-6 flex flex-col items-center justify-center">
+                <p class="text-6xl md:text-7xl kpi-value">18</p>
+                <p class="text-xl font-semibold kpi-label mt-3">Years of Experience</p>
+            </div>
+            <div class="card p-6 flex flex-col items-center justify-center">
+                <p class="text-6xl md:text-7xl kpi-value">10+</p>
+                <p class="text-xl font-semibold kpi-label mt-3">Medical Devices Developed</p>
+            </div>
+            <div class="card p-6 flex flex-col items-center justify-center">
+                <p class="text-6xl md:text-7xl kpi-value">1</p>
+                <p class="text-xl font-semibold kpi-label mt-3">Secured Patent as Inventor</p>
+            </div>
+        </section>
+
+        <section id="skills" class="card p-8 mb-16">
+            <h2 class="text-3xl font-bold section-title mb-8 text-center">Core Competencies & Areas of Expertise</h2>
+            <p class="text-center text-gray-600 mb-10 max-w-4xl mx-auto">
+                A T-shaped professional profile, combining broad technical skills with deep, specialized expertise in medical device R&D, regulatory affairs, quality systems, and strategic leadership.
+            </p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                <div class="skill-category flex flex-col items-center">
+                    <p class="text-6xl mb-4">⚖️</p>
+                    <h3 class="text-2xl mb-4">Regulatory & Quality Systems</h3>
+                    <ul>
+                        <li><strong>ISO 13485:2016 Lead Auditor</strong></li>
+                        <li>Med-QMS Implementation</li>
+                        <li>Regulatory Affairs & Due Diligence</li>
+                        <li>Risk Management (ISO 14971)</li>
+                        <li>Design Control</li>
+                        <li>Sterilization Process Validation</li>
+                    </ul>
+                </div>
+                <div class="skill-category flex flex-col items-center">
+                    <p class="text-6xl mb-4">🛠️</p>
+                    <h3 class="text-2xl mb-4">Product Development & Engineering</h3>
+                    <ul>
+                        <li><strong>Conception to Realization of Medical Devices</strong></li>
+                        <li>New Product Development</li>
+                        <li>SaMD and Medical Device Software</li>
+                        <li>System Engineering</li>
+                        <li>Sustenance Engineering</li>
+                        <li>Prototyping & Validation</li>
+                        <li>Manufacturing Processes (HF Welding)</li>
+                        <li>Reverse Engineering</li>
+                        <li>Re-engineering</li>
+                    </ul>
+                </div>
+                <div class="skill-category flex flex-col items-center">
+                    <p class="text-6xl mb-4">🚀</p>
+                    <h3 class="text-2xl mb-4">Leadership & Strategy</h3>
+                    <ul>
+                        <li><strong>Leadership</strong></li>
+                        <li><strong>Innovation</strong></li>
+                        <li><strong>People Management</strong></li>
+                        <li>Design Thinking</li>
+                        <li>Critical Thinking & Problem Solving</li>
+                        <li>Project Planning & Execution</li>
+                        <li>Strategic Direction & IP Management</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <main class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            
+            <div class="card p-8 lg:col-span-2">
+                <h2 class="text-3xl font-bold section-title mb-6 text-center">Core Foundation: R&D and Regulatory Synergy</h2>
+                <p class="text-center text-gray-600 mb-8 max-w-4xl mx-auto">
+                    A rare and valuable combination of deep technical expertise in Research & Development with robust, certified knowledge in Regulatory Affairs and Quality Systems. This dual-focus ensures products are not only innovative but are "built for compliance" from day one.
+                </p>
+                <div class="flex justify-center items-center h-64 md:h-72 relative">
+                    <div class="synergy-circle" style="background-color: rgba(0, 63, 92, 0.8); left: 25%; transform: translateX(-50%);">
+                        <span>R&D Innovation<br/>(Conception to Realization)</span>
+                    </div>
+                    <div class="synergy-circle" style="background-color: rgba(255, 124, 67, 0.8); right: 25%; transform: translateX(50%);">
+                        <span>Regulatory Excellence<br/>(ISO 13485, FDA, Indian MDR)</span>
+                    </div>
+                    <div class="synergy-center-circle">
+                        <span>Synergistic Leadership</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-8">
+                <h2 class="text-3xl font-bold section-title mb-6 text-center">Regulatory & Quality Proficiency</h2>
+                <p class="text-center text-gray-600 mb-8">
+                    Expertise across the critical domains of medical device compliance, demonstrated by hands-on leadership and formal certification. This ensures accelerated market access and mitigated risk.
+                </p>
+                <div class="chart-container">
+                    <canvas id="regulatoryRadarChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="card p-8">
+                <h2 class="text-3xl font-bold section-title mb-6 text-center">DHF Remediation: Team Leadership</h2>
+                <p class="text-center text-gray-600 mb-8">
+                    Successfully managed a 10-person team to remediate critical Design History Files, showcasing a balanced approach to project management, mentorship, and ensuring strict compliance oversight. Mitigated significant regulatory risks and ensured QMS compliance.</p>
+                <div class="chart-container">
+                    <canvas id="teamLeadershipDonutChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card p-8 lg:col-span-2">
+                <h2 class="text-3xl font-bold section-title mb-8 text-center">Key Products & Solutions</h2>
+                <p class="text-center text-gray-600 mb-10 max-w-4xl mx-auto">
+                    Extensive experience in the development of a variety of medical devices and systems, demonstrating breadth of technical leadership and problem-solving, with a strong emphasis on regulatory adherence.
+                </p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <div class="product-solution-item">
+                        <p class="text-5xl mb-2">⚡</p>
+                        <p class="text-lg font-bold" style="color:#003F5C;">Image-Guided Navigation Systems</p>
+                        <p class="text-sm mt-1">Led product development from concept to market; defined regulatory strategy.</p>
+                    </div>
+                    <div class="product-solution-item">
+                        <p class="text-5xl mb-2">⚡</p>
+                        <p class="text-lg font-bold" style="color:#2F4B7C;">Ablation Systems</p>
+                        <p class="text-sm mt-1">Led product development from concept to market; ensured US FDA & Indian MDR 2017 due diligence.</p>
+                    </div>
+                    <div class="product-solution-item">
+                        <p class="text-5xl mb-2">💉</p>
+                        <p class="text-lg font-bold" style="color:#003F5C;">Vascular Access Devices</p>
+                        <p class="text-sm mt-1">Drove cost optimization and innovation programs. Led regulatory due diligence for design changes.</p>
+                    </div>
+                    <div class="product-solution-item">
+                        <p class="text-5xl mb-2">📦</p>
+                        <p class="text-lg font-bold" style="color:#2F4B7C;">Colostomy Kits</p>
+                        <p class="text-sm mt-1">Experience with development of colostomy kits.</p>
+                    </div>
+                    <div class="product-solution-item">
+                        <p class="text-5xl mb-2">🩹</p>
+                        <p class="text-lg font-bold" style="color:#003F5C;">NPWT (Negative Pressure Wound Therapy)</p>
+                        <p class="text-sm mt-1">Experience in advanced wound care device development.</p>
+                    </div>
+                    <div class="product-solution-item">
+                        <p class="text-5xl mb-2">🦵</p>
+                        <p class="text-lg font-bold" style="color:#003F5C;">DVT Compression Therapy</p>
+                        <p class="text-sm mt-1">Involved in devices for deep vein thrombosis prevention.</p>
+                    </div>
+                    <div class="product-solution-item">
+                        <p class="text-5xl mb-2">🧊</p>
+                        <p class="text-lg font-bold" style="color:#2F4B7C;">Cryotherapy</p>
+                        <p class="text-sm mt-1">Experience with devices utilizing cold for therapeutic purposes.</p>
+                    </div>
+                    <!-- Merged: Wearable Orthopedic Supports -->
+                    <div class="product-solution-item">
+                        <p class="text-5xl mb-2">💪</p>
+                        <p class="text-lg font-bold" style="color:#003F5C;">Wearable Orthopedic Supports</p>
+                        <ul>
+                            <li>Prophylactic Knee Braces</li>
+                            <li>Functional Knee Braces</li>
+                            <li>Rehabilitative Knee Braces</li>
+                            <li>Supports for Upper & Lower Extremity Joints</li>
+                            <li>Lumbar/Thoraco-lumbar Supports</li>
+                            <li>Cervical Supports</li>
+                            <li>Spinal Support & Rehabilitation Devices</li>
+                            <li>Exposure to Implantable Orthopedic Devices.</li>
+                        </ul>
+                    </div>
+                    <!-- Merged: Targeted Temperature Management Systems -->
+                    <div class="product-solution-item">
+                        <p class="text-5xl mb-2">🌡️</p>
+                        <p class="text-lg font-bold" style="color:#2F4B7C;">Targeted Temperature Management Systems</p>
+                        <ul>
+                            <li>Contributed to systems for precise body temperature control.</li>
+                            <li>Thermoregulation systems for Hypothermia treatment.</li>
+                            <li>Normothermia maintenance systems.</li>
+                            <li>Systems for Alopecia induced hair loss treatment.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-8 lg:col-span-2">
+                <h2 class="text-3xl font-bold section-title mb-8 text-center">Integrated Career & Product Lifecycle Journey</h2>
+                <p class="text-center text-gray-600 mb-10 max-w-4xl mx-auto">
+                    An 18-year journey of progressive growth, demonstrating leadership across product ideation, development, compliance, and market sustenance. Scroll horizontally to view the full timeline.
+                </p>
+                <div class="timeline-scroll-container">
+                    <div class="timeline-wrapper">
+                        <div class="timeline-line"></div>
+                        <div class="timeline-event">
+                            <div class="timeline-dot">⚙️</div>
+                            <div class="timeline-content-card">
+                                <h3 class="font-bold text-xl text-blue-700">Technician</h3>
+                                <p class="text-gray-500">FAG Bearings India Ltd. | 2007-2010</p>
+                                <p class="mt-2">Managed day-to-day production activities, manufacturing line setting & 5S activities.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-event">
+                            <div class="timeline-dot">📐</div>
+                            <div class="timeline-content-card">
+                                <h3 class="font-bold text-xl text-blue-700">Junior Engineer- Design & Dev.</h3>
+                                <p class="text-gray-500">Steelsmith Continental Mfg. | 2010-2012</p>
+                                <p class="mt-2">Responsible for detailing of PEB projects, managing assembly layouts & shipping dockets.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-event">
+                            <div class="timeline-dot">💡</div>
+                            <div class="timeline-content-card">
+                                <h3 class="font-bold text-xl text-blue-700">Senior Engineer- Technical</h3>
+                                <p class="text-gray-500">Wear Resist Technologies | 2012-2013</p>
+                                <p class="mt-2">Responsible for design & drawings components, assessing worn-out components & proposing solutions.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-event">
+                            <div class="timeline-dot">🔬</div>
+                            <div class="timeline-content-card">
+                                <h3 class="font-bold text-xl text-blue-700">Asst. Engineer (R&D)</h3>
+                                <p class="text-gray-500">Dynamic Techno Medicals | 2013-2018</p>
+                                <p class="mt-2">Involved in new product development, process validation, and training manufacturing team.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-event">
+                            <div class="timeline-dot">📈</div>
+                            <div class="timeline-content-card">
+                                <h3 class="font-bold text-xl text-blue-700">Lead Engineer (R&D)</h3>
+                                <p class="text-gray-500">HCL Technologies | 2018-2021</p>
+                                <p class="mt-2">Drove cost-optimization programs, innovation, and sustenance engineering for vascular access devices.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-event">
+                            <div class="timeline-dot">✅</div>
+                            <div class="timeline-content-card">
+                                <h3 class="font-bold text-xl text-blue-700">QA/RA Lead</h3>
+                                <p class="text-gray-500">Indegene | 2021-2022</p>
+                                <p class="mt-2">Led DHF remediation, QMS compliance, and mentored a 10-person team.</p>
+                            </div>
+                        </div>
+                        <div class="timeline-event">
+                            <div class="timeline-dot">🌟</div>
+                            <div class="timeline-content-card">
+                                <h3 class="font-bold text-xl text-blue-700">Engineering Lead</h3>
+                                <p class="text-gray-500">NESA MedTech | 2021-Present</p>
+                                <p class="mt-2">Directing end-to-end product realization, regulatory strategy, and IP management.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-8 lg:col-span-2">
+                <h2 class="text-3xl font-bold section-title mb-8 text-center">Trainings & Certifications</h2>
+                <p class="text-center text-gray-600 mb-10 max-w-4xl mx-auto">
+                    Key trainings and certifications that underpin a strong foundation in quality, regulatory, and technical excellence within the medical device industry.
+                </p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-center">
+                    <div class="training-item flex flex-col items-center">
+                        <p class="text-5xl mb-2">🎓</p>
+                        <p class="text-lg font-bold" style="color:#003F5C;">ISO 13485:2016 Lead Auditor</p>
+                        <p class="text-sm mt-1">Certified expertise in Medical Device Quality Management Systems.</p>
+                    </div>
+                    <div class="training-item flex flex-col items-center">
+                        <p class="text-5xl mb-2">📜</p>
+                        <p class="text-lg font-bold" style="color:#2F4B7C;">Risk Management (ISO 14971)</p>
+                        <p class="text-sm mt-1">In-depth training on risk management for medical devices.</p>
+                    </div>
+                    <div class="training-item flex flex-col items-center">
+                        <p class="text-5xl mb-2">📝</p>
+                        <p class="text-lg font-bold" style="color:#003F5C;">Design Control for Medical Devices</p>
+                        <p class="text-sm mt-1">Comprehensive training on design control principles and practices.</p>
+                    </div>
+                     <div class="training-item flex flex-col items-center">
+                        <p class="text-5xl mb-2">🔬</p>
+                        <p class="text-lg font-bold" style="color:#2F4B7C;">Sterilization Process Validation</p>
+                        <p class="text-sm mt-1">Specialized training in validating sterilization processes for medical devices.</p>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <section id="contact-me" class="card p-6 mt-16">
+            <h2 class="text-3xl font-bold section-title mb-6 text-center">Contact Me</h2>
+            <div class="flex flex-col md:flex-row justify-center items-center space-y-4 md:space-y-0 md:space-x-8">
+                <div class="text-center">
+                    <i class="fas fa-envelope text-5xl mb-2" style="color:#003F5C;"></i>
+                    <p class="text-lg font-bold" style="color:#003F5C;">Email</p>
+                    <a href="mailto:vineeshv1886@outlook.com" class="text-blue-600 hover:underline">vineeshv1886@outlook.com</a>
+                </div>
+                <div class="text-center">
+                    <i class="fab fa-linkedin text-5xl mb-2" style="color:#003F5C;"></i>
+                    <p class="text-lg font-bold" style="color:#003F5C;">LinkedIn</p>
+                    <a href="https://www.linkedin.com/in/vineeshkumar-vishwakarma-8001a643" target="_blank" class="text-blue-600 hover:underline">linkedin.com/in/vineeshkumar-vishwakarma-8001a643</a>
+                </div>
+                <div class="text-center">
+                    <i class="fas fa-phone text-5xl mb-2" style="color:#003F5C;"></i>
+                    <p class="text-lg font-bold" style="color:#003F5C;">Phone</p>
+                    <a href="tel:+918547885189" class="text-blue-600 hover:underline">+91 85478 85189</a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        const FONT_COLOR = '#343A40'; /* Darker font for better contrast */
+        const GRID_COLOR = '#CED4DA'; /* Lighter grid lines */
+        const PALETTE = {
+            blueDark: '#003F5C',
+            blueMedium: '#2F4B7C',
+            orange: '#FF7C43',
+            gold: '#FFA600'
+        };
+
+        const wrapLabels = (label, maxLength) => {
+            if (typeof label !== 'string' || label.length <= maxLength) {
+                return label;
+            }
+            const words = label.split(' ');
+            const lines = [];
+            let currentLine = '';
+            for (const word of words) {
+                if ((currentLine + word).length <= maxLength) {
+                    currentLine += `${word} `;
+                } else {
+                    lines.push(currentLine.trim());
+                    currentLine = `${word} `;
+                }
+            }
+            lines.push(currentLine.trim());
+            return lines;
+        };
+
+        const tooltipTitleCallback = (tooltipItems) => {
+            const item = tooltipItems[0];
+            let label = item.chart.data.labels[item.dataIndex];
+            if (Array.isArray(label)) {
+                return label.join(' ');
+            }
+            return label;
+        };
+
+        const commonChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: FONT_COLOR,
+                        font: {
+                            size: 14
+                        }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        title: tooltipTitleCallback
+                    },
+                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                    titleFont: { size: 16 },
+                    bodyFont: { size: 14 },
+                    padding: 10
+                }
+            }
+        };
+
+        const radarChartCtx = document.getElementById('regulatoryRadarChart');
+        if (radarChartCtx) {
+            new Chart(radarChartCtx, {
+                type: 'radar',
+                data: {
+                    labels: [
+                        'ISO 13485',
+                        wrapLabels('US FDA Strategy', 16),
+                        'Indian MDR 2017',
+                        wrapLabels('Risk Mgmt (14971)', 16),
+                        'QMS Implementation',
+                        'Design Control'
+                    ],
+                    datasets: [{
+                        label: 'Proficiency',
+                        data: [5, 5, 4, 5, 5, 5],
+                        backgroundColor: 'rgba(255, 124, 67, 0.2)',
+                        borderColor: PALETTE.orange,
+                        pointBackgroundColor: PALETTE.orange,
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: PALETTE.orange
+                    }]
+                },
+                options: {
+                    ...commonChartOptions,
+                    scales: {
+                        r: {
+                            angleLines: { color: GRID_COLOR },
+                            grid: { color: GRID_COLOR },
+                            pointLabels: {
+                                color: FONT_COLOR,
+                                font: { size: 12 }
+                            },
+                            ticks: {
+                                backdropColor: 'rgba(248, 249, 250, 0.8)', /* Match body background */
+                                color: FONT_COLOR,
+                                stepSize: 1
+                            },
+                            suggestedMin: 0,
+                            suggestedMax: 5
+                        }
+                    }
+                }
+            });
+        }
+
+        const donutChartCtx = document.getElementById('teamLeadershipDonutChart');
+        if (donutChartCtx) {
+            new Chart(donutChartCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Project Management', 'Team Mentorship', 'Compliance Oversight', 'Technical SME'],
+                    datasets: [{
+                        label: 'Team Leadership Focus',
+                        data: [35, 25, 25, 15],
+                        backgroundColor: [PALETTE.blueDark, PALETTE.orange, PALETTE.blueMedium, PALETTE.gold],
+                        borderColor: '#F8F9FA', /* Match body background */
+                        borderWidth: 4,
+                        hoverOffset: 8
+                    }]
+                },
+                options: {
+                    ...commonChartOptions,
+                    plugins: {
+                        ...commonChartOptions.plugins,
+                        legend: {
+                            ...commonChartOptions.plugins.legend,
+                            position: 'bottom',
+                            labels: {
+                                ...commonChartOptions.plugins.legend.labels,
+                                padding: 20
+                            }
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>
